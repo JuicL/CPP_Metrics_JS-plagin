@@ -16,7 +16,12 @@
   "contributes": {
     "commands": [{
       "command": "cppmetrics.helloWorld",
-      "title": "Hello World"
+      "title": "Hello World",
+      "languages": [
+        {
+          "id": "Cpp-metrics-id"
+        }
+      ]
     }]
   },
   "scripts": {
