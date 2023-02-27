@@ -23,7 +23,22 @@ async function getNewestDirectory(dirName) {
 	//console.log("newestFolder", newestFolder);
 	//console.log("newestFolderName", newestFolderName);
 	return path.resolve(path.join(dirName, newestFolderName));
-  }
+}
+const exec = require('child_process').exec;
+function os_func() {
+    this.execCommand = function(cmd, callback) {
+        exec(cmd, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`exec error: ${error}`);
+                return;
+            }
+
+            callback(stdout);
+        });
+    }
+}
+var os2 = new os_func();
+
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -55,34 +70,45 @@ function activate(context) {
 			return;
 		}
 		
-		var cppMetricCorePath = "C:\\Users/User/source/repos/AntlrTreeVisualization/AntlrTreeVisualization/bin/Debug";
-		const exec = require('child_process').exec;
-		try {
-			exec(`cd ${cppMetricCorePath}`
-			+ `& start AntlrTreeVisualization.exe`
-			+`-i ${projectPath}`
-			+`-o ${outPath}`
-			, { encoding: 'utf-8' });
-		} catch (error) {
-			vscode.window.showInformationMessage('Error!');
-			return;
-		}
-		
-		vscode.window.showInformationMessage('Reports done!','View Report').then(selection =>{
-			if(selection === 'View Report')
-			{
-				let outPutChannel = vscode.window.createOutputChannel("Cpp-metrics","Cpp-metrics-id");
-				var folder = getNewestDirectory(projectPath);
-				folder.then(function(res){
-					console.log("newestFolderName", res);
-					//let fileName = path.join(res, "index.html")
-					const exec = require('child_process').exec;
-					exec(`cd ${res} & start index.html`, { encoding: 'utf-8' });
+		var cppMetricCorePath = "C:\\Users\\User\\source\\repos\\CPP_Metrics\\CPP_Metrics\\bin\\Debug\\net6.0";
+		os2.execCommand(`cd ${cppMetricCorePath}`
+						+ `& start CPP_Metrics.exe`
+						+` -f ${projectPath}`
+						+` -o ${projectPath}`
+
+			, function (returnvalue) {
+
+				vscode.window.showInformationMessage('Reports done!','View Report').then(selection =>{
+					if(selection === 'View Report')
+					{
+						let outPutChannel = vscode.window.createOutputChannel("Cpp-metrics","Cpp-metrics-id");
+						var reportFold = path.join(projectPath, "Report")
+						var folder = getNewestDirectory(reportFold);
+						folder.then(function(res){
+							console.log("newestFolderName", res);
+							//let fileName = path.join(res, "index.html")
+							const exec = require('child_process').exec;
+							exec(`cd ${res} & start index.html`, { encoding: 'utf-8' });
+						});
+						outPutChannel.appendLine(folder);
+					}
+					//console.log(selection);
 				});
-				outPutChannel.appendLine(folder);
-			}
-			//console.log(selection);
 		});
+
+		//const exec = require('child_process').exec;
+		//try {
+		//	exec(`cd ${cppMetricCorePath}`
+		//	+ `& start AntlrTreeVisualization.exe`
+		//	+`-i ${projectPath}`
+		//`	+`-o ${outPath}`
+		//	, { encoding: 'utf-8' });
+		//} catch (error) {
+		//	vscode.window.showInformationMessage('Error!');
+		//	return;
+		//}
+		
+		
 	});
 
 	context.subscriptions.push(disposable);
