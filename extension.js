@@ -54,7 +54,7 @@ function activate(context) {
 	
 	var projectPath;
 	var outPath;
-	let disposable = vscode.commands.registerCommand('cppmetrics.helloWorld', function () {
+	let disposable = vscode.commands.registerCommand('cppmetrics.Start_metric', function () {
 		//const os = require("os");
 		//let osVersion = os.platform();
 		//console.log("OS Version:", osVersion);

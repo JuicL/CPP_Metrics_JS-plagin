@@ -15,8 +15,8 @@
   "main": "./extension.js",
   "contributes": {
     "commands": [{
-      "command": "cppmetrics.helloWorld",
-      "title": "Hello World",
+      "command": "cppmetrics.Start_metric",
+      "title": "Start metric collection",
       "languages": [
         {
           "id": "Cpp-metrics-id"
