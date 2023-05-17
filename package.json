@@ -22,7 +22,17 @@
           "id": "Cpp-metrics-id"
         }
       ]
-    }]
+    },
+    {
+      "command": "cppmetrics.InitializeProjectName",
+      "title": "Initialize project name",
+      "languages": [
+        {
+          "id": "Cpp-metrics-id"
+        }
+      ]
+    }
+  ]
   },
   "scripts": {
     "lint": "eslint .",

@@ -110,8 +110,24 @@ function activate(context) {
 		
 		
 	});
-
+	let disposable2 = vscode.commands.registerCommand('cppmetrics.InitializeProjectName', async function () {
+		const editor = vscode.window.activeTextEditor;
+		const selectedText = editor.document.getText(editor.selection);
+		const searchQuery = await vscode.window.showInputBox({
+			placeHolder: "Input name",
+			prompt: "Input project name",
+			value: selectedText
+		  });
+		  if(searchQuery === ''){
+			console.log(searchQuery);
+			vscode.window.showErrorMessage('Error! Project name is empty');
+		  }
+		  vscode.window.showInformationMessage('Initialize project name succeed!','Ok');
+		  
+	});
 	context.subscriptions.push(disposable);
+	context.subscriptions.push(disposable2);
+
 }
 
 // This method is called when your extension is deactivated
