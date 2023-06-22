@@ -31,6 +31,42 @@
           "id": "Cpp-metrics-id"
         }
       ]
+    },
+    {
+      "command": "cppmetrics.ViewProjectName",
+      "title": "View Project Name",
+      "languages": [
+        {
+          "id": "Cpp-metrics-id"
+        }
+      ]
+    },
+    {
+      "command": "cppmetrics.Update",
+      "title": "Update project name",
+      "languages": [
+        {
+          "id": "Cpp-metrics-id"
+        }
+      ]
+    },
+    {
+      "command": "cppmetrics.Delete",
+      "title": "Delete project",
+      "languages": [
+        {
+          "id": "Cpp-metrics-id"
+        }
+      ]
+    },
+    {
+      "command": "cppmetrics.Solution",
+      "title": "Get solution",
+      "languages": [
+        {
+          "id": "Cpp-metrics-id"
+        }
+      ]
     }
   ]
   },
