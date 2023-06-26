@@ -3,7 +3,7 @@
   "displayName": "CPPMetrics",
   "publisher": "JuicL2",
   "description": "JuicL",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -18,101 +18,99 @@
   "contributes": {
     "configuration": {
       "type": "object",
-			"title": "CPPMetrics",
-			"properties": {
+      "title": "CPPMetrics",
+      "properties": {
         "CPPMetrics.InludePath": {
-					"type": "array",
-					"default": [
-					
-					],
-					"items": {
-						"type": "string"
-					},
-					"markdownDescription": "%CPPMetrics.InludePath"
-				},
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "markdownDescription": "%CPPMetrics.InludePath"
+        },
         "CPPMetrics.CorePath": {
-					"type": "string",
-					"default": [
-					  "C:\\Users\\User\\source\\repos\\CPP_Metrics\\CPP_Metrics\\bin\\Debug\\net6.0"
-					],
-					
-					"markdownDescription": "%CPPMetrics.CorePath"
-				}
+          "type": "string",
+          "default": [
+            "C:\\Users\\User\\source\\repos\\CPP_Metrics\\CPP_Metrics\\bin\\Debug\\net6.0"
+          ],
+          "markdownDescription": "%CPPMetrics.CorePath"
+        }
       }
     },
-    "commands": [{
-      "command": "cppmetrics.Start_metric",
-      "title": "Start metric collection",
-      "languages": [
-        {
-          "id": "Cpp-metrics-id"
-        }
-      ]
-    },
-    {
-      "command": "cppmetrics.InitializeProjectName",
-      "title": "Initialize project name",
-      "languages": [
-        {
-          "id": "Cpp-metrics-id"
-        }
-      ]
-    },
-    {
-      "command": "cppmetrics.ViewProjectName",
-      "title": "View Project Name",
-      "languages": [
-        {
-          "id": "Cpp-metrics-id"
-        }
-      ]
-    },
-    {
-      "command": "cppmetrics.Update",
-      "title": "Update project name",
-      "languages": [
-        {
-          "id": "Cpp-metrics-id"
-        }
-      ]
-    },
-    {
-      "command": "cppmetrics.Delete",
-      "title": "Delete project",
-      "languages": [
-        {
-          "id": "Cpp-metrics-id"
-        }
-      ]
-    },
-    {
-      "command": "cppmetrics.Solution",
-      "title": "Get solution",
-      "languages": [
-        {
-          "id": "Cpp-metrics-id"
-        }
-      ]
-    },
-    {
-      "command": "cppmetrics.ConfigureSettings",
-      "title": "Configure Settings",
-      "languages": [
-        {
-          "id": "Cpp-metrics-id"
-        }
-      ]
-    },
-    {
-      "command": "cppmetrics.ConfigureCorePath",
-      "title": "Set path to cppmetrics core",
-      "languages": [
-        {
-          "id": "Cpp-metrics-id"
-        }
-      ]
-    }
-  ]
+    "commands": [
+      {
+        "command": "cppmetrics.Start_metric",
+        "title": "Start metric collection",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
+        "command": "cppmetrics.InitializeProjectName",
+        "title": "Initialize project name",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
+        "command": "cppmetrics.ViewProjectName",
+        "title": "View Project Name",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
+        "command": "cppmetrics.Update",
+        "title": "Update project name",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
+        "command": "cppmetrics.Delete",
+        "title": "Delete project",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
+        "command": "cppmetrics.Solution",
+        "title": "Get solution",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
+        "command": "cppmetrics.ConfigureSettings",
+        "title": "Configure Settings",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
+        "command": "cppmetrics.ConfigureCorePath",
+        "title": "Set path to cppmetrics core",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",
@@ -130,5 +128,4 @@
     "typescript": "^4.9.4",
     "@vscode/test-electron": "^2.2.2"
   }
-  
 }
