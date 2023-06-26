@@ -53,7 +53,8 @@ function CreateConfigFile()
 	vscode.workspace.applyEdit(wsedit);
 	const obj = {
 		projectName: "", 
-		pathToCore: ""
+		pathToCore: "",
+		inludeFiles:[],
 	};
 	const writeStr = JSON.stringify(obj);
 	const writeData = Buffer.from(writeStr, 'utf8')
@@ -107,7 +108,17 @@ function activate(context) {
 	});
 	context.subscriptions.push(createConfigFile);
 	
+	let configureSettings = vscode.commands.registerCommand('cppmetrics.ConfigureSettings', function () {
+		vscode.commands.executeCommand('workbench.action.openSettings', 'cppmetrics InludePath')
 
+	});
+	context.subscriptions.push(configureSettings);
+	
+	let configureCorePath = vscode.commands.registerCommand('cppmetrics.ConfigureCorePath', function () {
+		vscode.commands.executeCommand('workbench.action.openSettings', 'cppmetrics CorePath')
+	});
+	context.subscriptions.push(configureCorePath);
+	
 	var projectPath;
 	var outPath;
 	let disposable = vscode.commands.registerCommand('cppmetrics.Start_metric', function () {
@@ -126,12 +137,16 @@ function activate(context) {
 			return;
 		}
 		
-		var cppMetricCorePath = "C:\\Users\\User\\source\\repos\\CPP_Metrics\\CPP_Metrics\\bin\\Debug\\net6.0";
-		os2.execCommand(`cd ${cppMetricCorePath}`
-						+ `& start CPP_Metrics.exe`
-						+` -f ${projectPath}`
-						+` -o ${projectPath}`
-
+		let cppMetricCorePath = vscode.workspace.getConfiguration('CPPMetrics').CorePath;
+		
+		var strCommand = `cd ${cppMetricCorePath}`
+		+ `& start CPP_Metrics.exe`
+		+` -f ${projectPath}`
+		+` -o ${projectPath}`;
+		let inludePath = vscode.workspace.getConfiguration('CPPMetrics').InludePath;
+		inludePath.forEach(x => strCommand += `-i ` + x);
+		
+		os2.execCommand(strCommand
 			, function (returnvalue) {
 
 				vscode.window.showInformationMessage('Reports done!','View Report').then(selection =>{
@@ -284,6 +299,9 @@ function activate(context) {
 	});
 	context.subscriptions.push(disposable4);
 	let disposable6 = vscode.commands.registerCommand('cppmetrics.Solution', async function () {
+		
+		
+		return;
 		const editor = vscode.window.activeTextEditor;
 		const selectedText = editor.document.getText(editor.selection);
 		const searchQuery = await vscode.window.showInputBox({

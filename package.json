@@ -1,7 +1,8 @@
 {
   "name": "cppmetrics",
   "displayName": "CPPMetrics",
-  "description": "",
+  "publisher": "JuicL2",
+  "description": "JuicL",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.75.0"
@@ -9,11 +10,36 @@
   "categories": [
     "Other"
   ],
+  "icon": "image/icon.png",
   "activationEvents": [
     "onCommand:cppmetrics.helloWorld"
   ],
   "main": "./extension.js",
   "contributes": {
+    "configuration": {
+      "type": "object",
+			"title": "CPPMetrics",
+			"properties": {
+        "CPPMetrics.InludePath": {
+					"type": "array",
+					"default": [
+					
+					],
+					"items": {
+						"type": "string"
+					},
+					"markdownDescription": "%CPPMetrics.InludePath"
+				},
+        "CPPMetrics.CorePath": {
+					"type": "string",
+					"default": [
+					  "C:\\Users\\User\\source\\repos\\CPP_Metrics\\CPP_Metrics\\bin\\Debug\\net6.0"
+					],
+					
+					"markdownDescription": "%CPPMetrics.CorePath"
+				}
+      }
+    },
     "commands": [{
       "command": "cppmetrics.Start_metric",
       "title": "Start metric collection",
@@ -67,6 +93,24 @@
           "id": "Cpp-metrics-id"
         }
       ]
+    },
+    {
+      "command": "cppmetrics.ConfigureSettings",
+      "title": "Configure Settings",
+      "languages": [
+        {
+          "id": "Cpp-metrics-id"
+        }
+      ]
+    },
+    {
+      "command": "cppmetrics.ConfigureCorePath",
+      "title": "Set path to cppmetrics core",
+      "languages": [
+        {
+          "id": "Cpp-metrics-id"
+        }
+      ]
     }
   ]
   },
@@ -86,4 +130,5 @@
     "typescript": "^4.9.4",
     "@vscode/test-electron": "^2.2.2"
   }
+  
 }
