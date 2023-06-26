@@ -2,7 +2,7 @@
   "name": "cppmetrics",
   "displayName": "CPPMetrics",
   "publisher": "JuicL2",
-  "description": "JuicL",
+  "description": "C++ code metrics",
   "version": "0.0.2",
   "engines": {
     "vscode": "^1.75.0"
@@ -40,7 +40,7 @@
     "commands": [
       {
         "command": "cppmetrics.Start_metric",
-        "title": "Start metric collection",
+        "title": "cppM: Start metric collection",
         "languages": [
           {
             "id": "Cpp-metrics-id"
@@ -49,7 +49,7 @@
       },
       {
         "command": "cppmetrics.InitializeProjectName",
-        "title": "Initialize project name",
+        "title": "cppM: Initialize project name",
         "languages": [
           {
             "id": "Cpp-metrics-id"
@@ -58,7 +58,7 @@
       },
       {
         "command": "cppmetrics.ViewProjectName",
-        "title": "View Project Name",
+        "title": "cppM: View Project Name",
         "languages": [
           {
             "id": "Cpp-metrics-id"
@@ -67,7 +67,7 @@
       },
       {
         "command": "cppmetrics.Update",
-        "title": "Update project name",
+        "title": "cppM: Update project name",
         "languages": [
           {
             "id": "Cpp-metrics-id"
@@ -76,7 +76,7 @@
       },
       {
         "command": "cppmetrics.Delete",
-        "title": "Delete project",
+        "title": "cppM: Delete project",
         "languages": [
           {
             "id": "Cpp-metrics-id"
@@ -85,7 +85,7 @@
       },
       {
         "command": "cppmetrics.Solution",
-        "title": "Get solution",
+        "title": "cppM: Get solution",
         "languages": [
           {
             "id": "Cpp-metrics-id"
@@ -94,7 +94,7 @@
       },
       {
         "command": "cppmetrics.ConfigureSettings",
-        "title": "Configure Settings",
+        "title": "cppM: Set additional compiler library files",
         "languages": [
           {
             "id": "Cpp-metrics-id"
@@ -103,7 +103,16 @@
       },
       {
         "command": "cppmetrics.ConfigureCorePath",
-        "title": "Set path to cppmetrics core",
+        "title": "cppM: Set path to cppmetrics core",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
+        "command": "cppmetrics.ConfigureOutPath",
+        "title": "cppM: Set Output to report",
         "languages": [
           {
             "id": "Cpp-metrics-id"
