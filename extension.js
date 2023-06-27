@@ -161,7 +161,7 @@ function activate(context) {
 		+` -o ${outPath}`;
 
 		let inludePath = vscode.workspace.getConfiguration('CPPMetrics').InludePath;
-		inludePath.forEach(x => strCommand += `-i ` + x);
+		inludePath.forEach(x => strCommand += ` -i ` + x);
 		
 		os2.execCommand(strCommand
 			, function (returnvalue) {
