@@ -113,6 +113,12 @@ function activate(context) {
 
 	});
 	context.subscriptions.push(configureSettings);
+
+	let сonfigureOutPath = vscode.commands.registerCommand('cppmetrics.ConfigureOutPath', function () {
+		vscode.commands.executeCommand('workbench.action.openSettings', 'cppmetrics OutPath')
+
+	});
+	context.subscriptions.push(сonfigureOutPath);
 	
 	let configureCorePath = vscode.commands.registerCommand('cppmetrics.ConfigureCorePath', function () {
 		vscode.commands.executeCommand('workbench.action.openSettings', 'cppmetrics CorePath')
@@ -138,11 +144,22 @@ function activate(context) {
 		}
 		
 		let cppMetricCorePath = vscode.workspace.getConfiguration('CPPMetrics').CorePath;
-		
+		let outPath;
+		let cppMetricOutPath = vscode.workspace.getConfiguration('CPPMetrics').OutPath;
+
+		if(cppMetricOutPath.length == 0)
+		{
+			outPath = projectPath
+		}
+		else{
+			outPath = cppMetricOutPath;
+		}
+
 		var strCommand = `cd ${cppMetricCorePath}`
 		+ `& start CPP_Metrics.exe`
 		+` -f ${projectPath}`
-		+` -o ${projectPath}`;
+		+` -o ${outPath}`;
+
 		let inludePath = vscode.workspace.getConfiguration('CPPMetrics').InludePath;
 		inludePath.forEach(x => strCommand += `-i ` + x);
 		

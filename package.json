@@ -34,6 +34,10 @@
             "C:\\Users\\User\\source\\repos\\CPP_Metrics\\CPP_Metrics\\bin\\Debug\\net6.0"
           ],
           "markdownDescription": "%CPPMetrics.CorePath"
+        },
+        "CPPMetrics.OutPath": {
+          "type": "string",
+          "markdownDescription": "%CPPMetrics.OutPath"
         }
       }
     },
@@ -112,7 +116,7 @@
       },
       {
         "command": "cppmetrics.ConfigureOutPath",
-        "title": "cppM: Set Output to report",
+        "title": "cppM: Set outpath to report",
         "languages": [
           {
             "id": "Cpp-metrics-id"
