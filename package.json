@@ -52,6 +52,15 @@
         ]
       },
       {
+        "command": "cppmetrics.Cfg",
+        "title": "cppM: Create boundary values file",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
         "command": "cppmetrics.InitializeProjectName",
         "title": "cppM: Initialize project name",
         "languages": [

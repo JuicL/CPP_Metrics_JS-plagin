@@ -3,6 +3,7 @@
 const vscode = require('vscode');
 const fs = require("fs/promises");
 const fs2 = require("fs");
+const exec1 = require("node:child_process");
 
 const path = require("path");
 
@@ -32,9 +33,7 @@ function os_func() {
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
                 console.error(`exec error: ${error}`);
-                return;
             }
-
             callback(stdout);
         });
     }
@@ -125,13 +124,71 @@ function activate(context) {
 	});
 	context.subscriptions.push(configureCorePath);
 	
-	var projectPath;
+	var spawn = require('child_process').spawn;
+	let cfg = vscode.commands.registerCommand('cppmetrics.Cfg', function () {
+
+		let terminals = vscode.window.terminals;
+		let terminal;
+		if(terminals.length == 0)
+		{
+			 terminal = vscode.window.createTerminal(`Ext Terminal`);
+		}
+		else{
+			terminal = terminals[0];
+		}
+		var projectPath;
+		if(vscode.workspace.workspaceFolders !== undefined) {
+			projectPath = vscode.workspace.workspaceFolders[0].uri.fsPath ; 
+		} 
+		else {
+			let message = "Working folder not found, open a folder an try again" ;
+			vscode.window.showErrorMessage(message);
+			return;
+		}
+		let cppMetricCorePath = vscode.workspace.getConfiguration('CPPMetrics').CorePath;
+		if(cppMetricCorePath.length == 0)
+		{
+			let message = "Path to core dont find" ;
+			vscode.window.showErrorMessage(message);
+			return;
+		}
+		var strCommand = `cd ${cppMetricCorePath}`
+		+ ` & CPP_Metrics.exe`
+		+` -cfg ${projectPath}`;
+
+		let inludePath = vscode.workspace.getConfiguration('CPPMetrics').InludePath;
+		inludePath.forEach(x => strCommand += ` -i ` + x);
+		
+		let process = exec(strCommand);
+		
+		process.stdout.on('data', function(data) {
+			console.log(data.toString()); 
+		});
+		process.stderr.on('data', function(data) {
+			console.log(data.toString()); 
+		});
+		process.on('exit', function(code) {
+			console.log(code.toString()); 
+		});
+		
+		return;
+		os2.execCommand(strCommand
+			, function (returnvalue) {
+
+				vscode.window.showInformationMessage('File created!','').then(selection =>{
+					
+				});
+		});
+	});
+	context.subscriptions.push(cfg);
 	var outPath;
+	const outPutChannel = vscode.window.createOutputChannel("Cpp-metrics","Cpp-metrics-id");
 	let disposable = vscode.commands.registerCommand('cppmetrics.Start_metric', function () {
 		//const os = require("os");
 		//let osVersion = os.platform();
 		//console.log("OS Version:", osVersion);
 		
+		var projectPath;
 		// Текущая папка
 
 		if(vscode.workspace.workspaceFolders !== undefined) {
@@ -144,6 +201,12 @@ function activate(context) {
 		}
 		
 		let cppMetricCorePath = vscode.workspace.getConfiguration('CPPMetrics').CorePath;
+		if(cppMetricCorePath.length == 0)
+		{
+			let message = "Path to core dont find" ;
+			vscode.window.showErrorMessage(message);
+			return;
+		}
 		let outPath;
 		let cppMetricOutPath = vscode.workspace.getConfiguration('CPPMetrics').OutPath;
 
@@ -155,21 +218,20 @@ function activate(context) {
 			outPath = cppMetricOutPath;
 		}
 
-		var strCommand = `cd ${cppMetricCorePath}`
-		+ `& start CPP_Metrics.exe`
+		var strCommand = `chcp 65001 & cd ${cppMetricCorePath}`
+		+ `& CPP_Metrics.exe`
 		+` -f ${projectPath}`
 		+` -o ${outPath}`;
 
 		let inludePath = vscode.workspace.getConfiguration('CPPMetrics').InludePath;
 		inludePath.forEach(x => strCommand += ` -i ` + x);
 		
-		os2.execCommand(strCommand
-			, function (returnvalue) {
-
+		
+		let process = exec(strCommand
+			, function (returnvalue,out,err) {
 				vscode.window.showInformationMessage('Reports done!','View Report').then(selection =>{
 					if(selection === 'View Report')
 					{
-						let outPutChannel = vscode.window.createOutputChannel("Cpp-metrics","Cpp-metrics-id");
 						var reportFold = path.join(projectPath, "Report")
 						var folder = getNewestDirectory(reportFold);
 						folder.then(function(res){
@@ -179,11 +241,24 @@ function activate(context) {
 							exec(`cd ${res} & start index.html`, { encoding: 'utf-8' });
 						});
 						outPutChannel.appendLine(folder);
+						outPutChannel.appendLine("КИрииллица");
+
 					}
 					//console.log(selection);
 				});
 		});
-
+		process.stdout.on('data', function(data) {
+			outPutChannel.appendLine(data.toString());
+			console.log(data.toString()); 
+		});
+		process.stderr.on('data', function(data) {
+			outPutChannel.appendLine(data.toString());
+			console.log(data.toString()); 
+		});
+		process.on('exit', function(code) {
+			outPutChannel.appendLine(code.toString());
+			console.log(code.toString()); 
+		});
 		//const exec = require('child_process').exec;
 		//try {
 		//	exec(`cd ${cppMetricCorePath}`
