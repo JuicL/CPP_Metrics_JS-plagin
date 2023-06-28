@@ -7,6 +7,7 @@ const exec1 = require("node:child_process");
 
 const path = require("path");
 
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 async function getNewestDirectory(dirName) {
@@ -77,16 +78,55 @@ function WriteFile(str)
 	const data = fs2.readFileSync(PathConfigFile, 'utf8');
 	return data;
 }
-function Update (name, newName)
-{
 
-}
-function Delete (name)
+function Update (name, newName,outPutChannel)
 {
-	
+	let cppMetricCorePath = vscode.workspace.getConfiguration('CPPMetrics').CorePath;
+	if(cppMetricCorePath.length == 0)
+	{
+		let message = "Path to core dont find" ;
+		vscode.window.showErrorMessage(message);
+		return;
+	}
+	var strCommand = `chcp 65001 & cd ${cppMetricCorePath}`
+	+ `& CPP_Metrics.exe`
+	+` -up ${name} ${newName}`;
+	let process = exec(strCommand);
+	process.stdout.on('data', function(data) {
+		outPutChannel.appendLine(data.toString());
+		console.log(data.toString()); 
+	});
+	process.stderr.on('data', function(data) {
+		outPutChannel.appendLine(data.toString());
+		console.log(data.toString()); 
+	});
 }
+
+function Delete (name,outPutChannel)
+{
+	let cppMetricCorePath = vscode.workspace.getConfiguration('CPPMetrics').CorePath;
+	if(cppMetricCorePath.length == 0)
+	{
+		let message = "Path to core dont find" ;
+		vscode.window.showErrorMessage(message);
+		return;
+	}
+	var strCommand = `chcp 65001 & cd ${cppMetricCorePath}`
+	+ `& CPP_Metrics.exe`
+	+` -dp ${name}`;
+	let process = exec(strCommand);
+	process.stdout.on('data', function(data) {
+		outPutChannel.appendLine(data.toString());
+		console.log(data.toString()); 
+	});
+	process.stderr.on('data', function(data) {
+		outPutChannel.appendLine(data.toString());
+		console.log(data.toString()); 
+	});
+}
+
 function activate(context) {
-
+	
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	//console.log('Congratulations, your extension "cppmetrics" is now active!');
@@ -95,18 +135,27 @@ function activate(context) {
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.djson
 	
+	
 
 	let createConfigFile = vscode.commands.registerCommand('cppmetrics.ViewProjectName', function () {
 		let text = ReadFile();
 		  const obj = JSON.parse(text);
-		  if(obj != null)
+		  if(obj != null && obj.projectName.length != 0)
 		  {
 			vscode.window.showInformationMessage(obj.projectName,'Ok');
+		  }
+		  else
+		  {
+			vscode.window.showErrorMessage("Project name is empty!",'Ok');
 		  }
 
 	});
 	context.subscriptions.push(createConfigFile);
-	
+	let db = vscode.commands.registerCommand('cppmetrics.Database', function () {
+		vscode.commands.executeCommand('workbench.action.openSettings', 'cppmetrics Database')
+	});
+	context.subscriptions.push(db);
+
 	let configureSettings = vscode.commands.registerCommand('cppmetrics.ConfigureSettings', function () {
 		vscode.commands.executeCommand('workbench.action.openSettings', 'cppmetrics InludePath')
 
@@ -124,7 +173,11 @@ function activate(context) {
 	});
 	context.subscriptions.push(configureCorePath);
 	
-	var spawn = require('child_process').spawn;
+	let ConfigurePathXml = vscode.commands.registerCommand('cppmetrics.ConfigurePathXml', function () {
+		vscode.commands.executeCommand('workbench.action.openSettings', 'cppmetrics OutPathXml')
+	});
+	context.subscriptions.push(ConfigurePathXml);
+
 	let cfg = vscode.commands.registerCommand('cppmetrics.Cfg', function () {
 
 		let terminals = vscode.window.terminals;
@@ -162,12 +215,15 @@ function activate(context) {
 		let process = exec(strCommand);
 		
 		process.stdout.on('data', function(data) {
+			outPutChannel.appendLine(data.toString());
 			console.log(data.toString()); 
 		});
 		process.stderr.on('data', function(data) {
+			outPutChannel.appendLine(data.toString());
 			console.log(data.toString()); 
 		});
 		process.on('exit', function(code) {
+			outPutChannel.appendLine(code.toString());
 			console.log(code.toString()); 
 		});
 		
@@ -181,13 +237,25 @@ function activate(context) {
 		});
 	});
 	context.subscriptions.push(cfg);
+
 	var outPath;
 	const outPutChannel = vscode.window.createOutputChannel("Cpp-metrics","Cpp-metrics-id");
 	let disposable = vscode.commands.registerCommand('cppmetrics.Start_metric', function () {
 		//const os = require("os");
 		//let osVersion = os.platform();
 		//console.log("OS Version:", osVersion);
-		
+		let dbflag = vscode.workspace.getConfiguration('CPPMetrics').Database;
+		if(dbflag == true)
+		{
+			let text = ReadFile();
+			const obj = JSON.parse(text);
+			if(obj.projectName.length == 0)
+			{
+				vscode.window.showErrorMessage("Initialize project name",'Ok');
+				return;
+			}
+			var projectName = obj.projectName;
+		}
 		var projectPath;
 		// Текущая папка
 
@@ -208,7 +276,9 @@ function activate(context) {
 			return;
 		}
 		let outPath;
+	
 		let cppMetricOutPath = vscode.workspace.getConfiguration('CPPMetrics').OutPath;
+		let cppMetricOutPathXml = vscode.workspace.getConfiguration('CPPMetrics').OutPathXml;
 
 		if(cppMetricOutPath.length == 0)
 		{
@@ -222,6 +292,14 @@ function activate(context) {
 		+ `& CPP_Metrics.exe`
 		+` -f ${projectPath}`
 		+` -o ${outPath}`;
+		if(dbflag == true)
+			strCommand += ` -p ${projectName}`;
+
+		
+		if(cppMetricOutPathXml.length != 0)
+		{
+			strCommand += ` -xmlo ` + cppMetricOutPath;
+		}
 
 		let inludePath = vscode.workspace.getConfiguration('CPPMetrics').InludePath;
 		inludePath.forEach(x => strCommand += ` -i ` + x);
@@ -240,11 +318,9 @@ function activate(context) {
 							const exec = require('child_process').exec;
 							exec(`cd ${res} & start index.html`, { encoding: 'utf-8' });
 						});
-						outPutChannel.appendLine(folder);
-						outPutChannel.appendLine("КИрииллица");
-
+						outPutChannel.appendLine(folder.toString());
 					}
-					//console.log(selection);
+					
 				});
 		});
 		process.stdout.on('data', function(data) {
@@ -259,18 +335,6 @@ function activate(context) {
 			outPutChannel.appendLine(code.toString());
 			console.log(code.toString()); 
 		});
-		//const exec = require('child_process').exec;
-		//try {
-		//	exec(`cd ${cppMetricCorePath}`
-		//	+ `& start AntlrTreeVisualization.exe`
-		//	+`-i ${projectPath}`
-		//`	+`-o ${outPath}`
-		//	, { encoding: 'utf-8' });
-		//} catch (error) {
-		//	vscode.window.showInformationMessage('Error!');
-		//	return;
-		//}
-		
 		
 	});
 	context.subscriptions.push(disposable);
@@ -339,13 +403,13 @@ function activate(context) {
 				  obj.projectName = searchQuery2;
 				  let str = JSON.stringify(obj);
 				  WriteFile(str);
-				  Update(searchQuery,searchQuery2);
+				  Update(searchQuery,searchQuery2,outPutChannel);
 			  }
 			  else 
 			  {
 				  return;
 			  }
-			  vscode.window.showInformationMessage('Initialize project name succeed!','Ok');
+			  vscode.window.showInformationMessage('Update project name succeed!','Ok');
 		  }
 		  catch(ex)
 		  {
@@ -376,13 +440,13 @@ function activate(context) {
 				  obj.projectName = "";
 				  let str = JSON.stringify(obj);
 				  WriteFile(str);
-				  Delete(searchQuery);
+				  Delete(searchQuery,outPutChannel);
 			  }
 			  else 
 			  {
 				  return;
 			  }
-			  vscode.window.showInformationMessage('Initialize project name succeed!','Ok');
+			  vscode.window.showInformationMessage('Delete project name succeed!','Ok');
 		  }
 		  catch(ex )
 		  {

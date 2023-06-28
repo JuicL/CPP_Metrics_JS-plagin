@@ -38,10 +38,28 @@
         "CPPMetrics.OutPath": {
           "type": "string",
           "markdownDescription": "%CPPMetrics.OutPath"
+        },
+        "CPPMetrics.OutPathXml": {
+          "type": "string",
+          "markdownDescription": "%CPPMetrics.OutPathXml"
+        },
+        "CPPMetrics.Database": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "%CPPMetrics.Database"
         }
       }
     },
     "commands": [
+      {
+        "command": "cppmetrics.Database",
+        "title": "cppM: configuration Database setting",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
       {
         "command": "cppmetrics.Start_metric",
         "title": "cppM: Start metric collection",
@@ -117,6 +135,15 @@
       {
         "command": "cppmetrics.ConfigureCorePath",
         "title": "cppM: Set path to cppmetrics core",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
+        "command": "cppmetrics.ConfigurePathXml",
+        "title": "cppM: Set path to xml report",
         "languages": [
           {
             "id": "Cpp-metrics-id"
