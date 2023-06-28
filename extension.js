@@ -318,7 +318,7 @@ function activate(context) {
 							const exec = require('child_process').exec;
 							exec(`cd ${res} & start index.html`, { encoding: 'utf-8' });
 						});
-						outPutChannel.appendLine(folder.toString());
+						//outPutChannel.appendLine(folder.toString());
 					}
 					
 				});
