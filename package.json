@@ -52,6 +52,42 @@
     },
     "commands": [
       {
+        "command": "cppmetrics.CreateProject",
+        "title": "cppM: Create project database",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
+        "command": "cppmetrics.getProjectId",
+        "title": "cppM: Get project(s) database",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
+        "command": "cppmetrics.getSolutionId",
+        "title": "cppM: Get solution(s) database",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
+        "command": "cppmetrics.getMetricsId",
+        "title": "cppM: Get metric(s) database",
+        "languages": [
+          {
+            "id": "Cpp-metrics-id"
+          }
+        ]
+      },
+      {
         "command": "cppmetrics.Database",
         "title": "cppM: configuration Database setting",
         "languages": [

@@ -338,6 +338,159 @@ function activate(context) {
 		
 	});
 	context.subscriptions.push(disposable);
+	
+	let CreateProject = vscode.commands.registerCommand('cppmetrics.CreateProject', async function () {
+		const editor = vscode.window.activeTextEditor;
+		const selectedText = editor.document.getText(editor.selection);
+		const searchQuery = await vscode.window.showInputBox({
+			placeHolder: "Input name",
+			prompt: "Input project name",
+			value: selectedText
+		  });
+
+		  let cppMetricCorePath = vscode.workspace.getConfiguration('CPPMetrics').CorePath;
+			if(cppMetricCorePath.length == 0)
+			{
+				let message = "Path to core dont find" ;
+				vscode.window.showErrorMessage(message);
+				return;
+			}
+			if(searchQuery === ''){
+				console.log(searchQuery);
+				vscode.window.showErrorMessage('Error! Project id is empty');
+				return;
+			}
+			var strCommand = `chcp 65001 & cd ${cppMetricCorePath}`
+			+ `& CPP_Metrics.exe`
+			+` -cp ${searchQuery}`;
+			
+
+			let process = exec(strCommand);
+			process.stdout.on('data', function(data) {
+				outPutChannel.appendLine(data.toString());
+				console.log(data.toString()); 
+			});
+			process.stderr.on('data', function(data) {
+				outPutChannel.appendLine(data.toString());
+				console.log(data.toString()); 
+			});
+		 
+	});
+	context.subscriptions.push(CreateProject);
+	let getProjectId = vscode.commands.registerCommand('cppmetrics.getProjectId', async function () {
+		const editor = vscode.window.activeTextEditor;
+		const selectedText = editor.document.getText(editor.selection);
+		const searchQuery = await vscode.window.showInputBox({
+			placeHolder: "Input name",
+			prompt: "Input project name",
+			value: selectedText
+		  });
+
+		  let cppMetricCorePath = vscode.workspace.getConfiguration('CPPMetrics').CorePath;
+			if(cppMetricCorePath.length == 0)
+			{
+				let message = "Path to core dont find" ;
+				vscode.window.showErrorMessage(message);
+				return;
+			}
+			var strCommand = `chcp 65001 & cd ${cppMetricCorePath}`
+			+ `& CPP_Metrics.exe`
+			+` -gp `;
+			if(searchQuery.length != 0){
+				strCommand += searchQuery;
+			}
+
+			let process = exec(strCommand);
+			process.stdout.on('data', function(data) {
+				outPutChannel.appendLine(data.toString());
+				console.log(data.toString()); 
+			});
+			process.stderr.on('data', function(data) {
+				outPutChannel.appendLine(data.toString());
+				console.log(data.toString()); 
+			});
+		 
+	});
+	context.subscriptions.push(getProjectId);
+	
+	let getSolutionId = vscode.commands.registerCommand('cppmetrics.getSolutionId', async function () {
+		const editor = vscode.window.activeTextEditor;
+		const selectedText = editor.document.getText(editor.selection);
+		const searchQuery = await vscode.window.showInputBox({
+			placeHolder: "Input project Id",
+			prompt: "Input project Id",
+			value: selectedText
+		  });
+
+		  let cppMetricCorePath = vscode.workspace.getConfiguration('CPPMetrics').CorePath;
+			if(cppMetricCorePath.length == 0)
+			{
+				let message = "Path to core dont find" ;
+				vscode.window.showErrorMessage(message);
+				return;
+			}
+			if(searchQuery === ''){
+				console.log(searchQuery);
+				vscode.window.showErrorMessage('Error! Project id is empty');
+				return;
+			}
+
+			var strCommand = `chcp 65001 & cd ${cppMetricCorePath}`
+			+ `& CPP_Metrics.exe`
+			+` -gs ${searchQuery}`;
+
+			let process = exec(strCommand);
+			process.stdout.on('data', function(data) {
+				outPutChannel.appendLine(data.toString());
+				console.log(data.toString()); 
+			});
+			process.stderr.on('data', function(data) {
+				outPutChannel.appendLine(data.toString());
+				console.log(data.toString()); 
+			});
+		 
+	});
+	context.subscriptions.push(getSolutionId);
+
+	let getMetricsId = vscode.commands.registerCommand('cppmetrics.getMetricsId', async function () {
+		const editor = vscode.window.activeTextEditor;
+		const selectedText = editor.document.getText(editor.selection);
+		const searchQuery = await vscode.window.showInputBox({
+			placeHolder: "Input solution Id",
+			prompt: "Input solution Id",
+			value: selectedText
+		  });
+
+		  let cppMetricCorePath = vscode.workspace.getConfiguration('CPPMetrics').CorePath;
+			if(cppMetricCorePath.length == 0)
+			{
+				let message = "Path to core dont find" ;
+				vscode.window.showErrorMessage(message);
+				return;
+			}
+			if(searchQuery === ''){
+				console.log(searchQuery);
+				vscode.window.showErrorMessage('Error! Solution id is empty');
+				return;
+			}
+
+			var strCommand = `chcp 65001 & cd ${cppMetricCorePath}`
+			+ `& CPP_Metrics.exe`
+			+` -gm ${searchQuery}`;
+
+			let process = exec(strCommand);
+			process.stdout.on('data', function(data) {
+				outPutChannel.appendLine(data.toString());
+				console.log(data.toString()); 
+			});
+			process.stderr.on('data', function(data) {
+				outPutChannel.appendLine(data.toString());
+				console.log(data.toString()); 
+			});
+		 
+	});
+	context.subscriptions.push(getMetricsId);
+
 	let disposable2 = vscode.commands.registerCommand('cppmetrics.InitializeProjectName', async function () {
 		const editor = vscode.window.activeTextEditor;
 		const selectedText = editor.document.getText(editor.selection);
@@ -429,6 +582,7 @@ function activate(context) {
 		  if(searchQuery === ''){
 			console.log(searchQuery);
 			vscode.window.showErrorMessage('Error! Project name is empty');
+			return;
 		  }
 		  
 		  let text = ReadFile();
